@@ -1,6 +1,5 @@
 const nodemailer = require("nodemailer");
 
-console.log(process.env.GMAIL_USERNAME, process.env.GMAIL_PASSWORD);
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -13,7 +12,7 @@ let receivers = ["tbazelczuk@gmail.com"];
 
 function prepareHtmlValue(item) {
   if (item.updatedItem) {
-    return `<strike>${item.updatedItem.value}</strike> - ${item.value}`;
+    return `<strike>${item.prevItem.value}</strike> - ${item.value}`;
   }
   return item.value;
 }

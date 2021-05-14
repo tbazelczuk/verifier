@@ -20,13 +20,17 @@ async function connect() {
   return new Promise(function (resolve, reject) {
     mongoose.connect(
       uristring,
-      { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+      },
       function (err, res) {
         if (err) {
-          console.log("ERROR connecting to mongodb:", err);
+          console.error("ERROR connecting to mongodb:", err);
           reject();
         } else {
-          console.log("Succeeded connected mongodb");
+          console.log("Succeeded connected to mongodb");
           resolve();
         }
       }
@@ -36,6 +40,7 @@ async function connect() {
 
 function disconnect() {
   mongoose.disconnect();
+  console.log("Succeeded disconnect from mongodb");
 }
 
 async function getAll() {
@@ -70,11 +75,11 @@ async function save(item) {
             });
         } else if (shouldUpdate(item, doc)) {
           NewsModel.findOneAndUpdate({ url }, item, { new: true })
-            .then((doc) => {
-              doc.updateFlag = true;
-              doc.updatedItem = item;
-              console.log("succeess updated", doc);
-              resolve(doc);
+            .then((newDoc) => {
+              newDoc.updateFlag = true;
+              newDoc.prevItem = doc;
+              console.log("succeess updated", newDoc);
+              resolve(newDoc);
             })
             .catch((err) => {
               console.log(err);
