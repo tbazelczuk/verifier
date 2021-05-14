@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 let receivers = ["tbazelczuk@gmail.com"];
 
 function prepareHtmlValue(item) {
-  if (item.updatedItem) {
+  if (item.prevItem) {
     return `<strike>${item.prevItem.value}</strike> - ${item.value}`;
   }
   return item.value;

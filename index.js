@@ -14,7 +14,7 @@ app.get("/api/sites", async (req, res, next) => {
 // app.use(express.static(path.join(__dirname, "dist", "crawler")));
 
 app.get("/api/sendMail", function (req, res) {
-  mailer.sendMail([{ url: "foo", value: 1, updatedItem: { value: 2 } }]);
+  mailer.sendMail([{ url: "foo", value: 1, prevItem: { value: 2 } }]);
   res.send("sendMail");
 });
 
