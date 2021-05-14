@@ -10,12 +10,25 @@ const transporter = nodemailer.createTransport({
 
 let receivers = ["tbazelczuk@gmail.com"];
 
+function prepareHtmlValue(item) {
+  if (item.updatedItem) {
+    return `<strike>${item.updatedItem.value}</strike> - ${item.value}`;
+  }
+  return item.value;
+}
+
 function sendMail(items) {
   let html = "<ol>";
   for (var i = 0; i < items.length; i++) {
     let item = items[i];
     html += "<li>";
-    html += '<a href="' + item.url + '">' + item.url + ' - ' + item.value + "</a>";
+    html +=
+      '<a href="' +
+      item.url +
+      '"> ' +
+      item.url +
+      "</a> - " +
+      prepareHtmlValue(item);
     html += "</li>";
   }
   html += "</ol>";
