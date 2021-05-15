@@ -1,18 +1,9 @@
-const nodemailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
 
-const transporter = nodemailer.createTransport({
-  domains: ["gmail.com", "googlemail.com"],
-  host: "smtp.gmail.com",
-  secureConnection: false,
-  requiresAuth: true,
-  port: 587,
-  auth: {
-    user: process.env.GMAIL_USERNAME,
-    pass: process.env.GMAIL_PASSWORD,
-  },
-});
-
-let receivers = ["tbazelczuk@gmail.com"];
+sgMail.setTwilioEmailAuth(
+  process.env.SENDGRID_USERNAME,
+  process.env.SENDGRID_PASSWORD
+);
 
 function prepareHtmlValue(item) {
   if (item.prevItem) {
@@ -37,17 +28,21 @@ function sendMail(items) {
   }
   html += "</ol>";
 
-  const options = {
-    from: "sender@email.com", // sender address
-    to: receivers.join(", "), // list of receivers
-    subject: "Verifier", // Subject line
-    html: html,
+  const msg = {
+    to: "tbazelczuk@gmail.com",
+    from: "test@example.com",
+    subject: "Verifier",
+    html,
   };
 
-  transporter.sendMail(options, (err, info) => {
-    if (err) console.log(err);
-    else console.log(info);
-  });
+  sgMail
+    .send(msg)
+    .then((response) => {
+      console.log("email send", response[0].statusCode);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 module.exports = {

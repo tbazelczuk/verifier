@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@sendgrid/mail": "^7.4.4",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.9",
     "express": "^4.17.1",
