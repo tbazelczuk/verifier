@@ -1,18 +1,14 @@
-const sgMail = require("@sendgrid/mail");
+const SendGrid = require("sendgrid");
+const sendGrid = SendGrid(process.env.SENDGRID_API_KEY);
 
-sgMail.setTwilioEmailAuth(
-  process.env.SENDGRID_USERNAME,
-  process.env.SENDGRID_PASSWORD
-);
-
-function prepareHtmlValue(item) {
+function prepareHtmlItem(item) {
   if (item.prevItem) {
     return `<strike>${item.prevItem.value}</strike> - ${item.value}`;
   }
   return item.value;
 }
 
-function sendMail(items) {
+function prepareHtml(items) {
   let html = "<ol>";
   for (var i = 0; i < items.length; i++) {
     let item = items[i];
@@ -23,25 +19,49 @@ function sendMail(items) {
       '"> ' +
       item.url +
       "</a> - " +
-      prepareHtmlValue(item);
+      prepareHtmlItem(item);
     html += "</li>";
   }
   html += "</ol>";
+  return html;
+}
 
-  const msg = {
-    to: "tbazelczuk@gmail.com",
-    from: "test@example.com",
-    subject: "Verifier",
-    html,
-  };
+function sendMail(items) {
+  let html = prepareHtml(items);
 
-  sgMail
-    .send(msg)
-    .then((response) => {
-      console.log("email send", response[0].statusCode);
+  const request = sendGrid.emptyRequest({
+    method: "POST",
+    path: "/v3/mail/send",
+    body: {
+      personalizations: [
+        {
+          to: [
+            {
+              email: "tbazelczuk@gmail.com",
+            },
+          ],
+          subject: "Verifier",
+        },
+      ],
+      from: {
+        email: "test@example.com",
+      },
+      content: [
+        {
+          type: "text/html",
+          value: html,
+        },
+      ],
+    },
+  });
+
+  return sendGrid
+    .API(request)
+    .then(function (response) {
+      console.log("sendMail", response.statusCode);
     })
-    .catch((error) => {
-      console.error(error);
+    .catch(function (error) {
+      console.log("sendMail", error.response);
     });
 }
 
