@@ -1,5 +1,5 @@
 {
-  "name": "crawler",
+  "name": "verifier",
   "version": "0.0.0",
   "engines": {
     "node": "15.x",
@@ -10,12 +10,12 @@
   },
   "private": true,
   "dependencies": {
-    "@sendgrid/mail": "^7.4.4",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.9",
+    "dotenv": "^4.0.0",
     "express": "^4.17.1",
+    "googleapis": "^73.0.0",
     "mongoose": "^5.12.9",
-    "nodemailer": "^6.6.0",
-    "sendgrid": "^5.2.3"
+    "nodemailer": "^6.6.0"
   }
 }
