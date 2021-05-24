@@ -11,7 +11,7 @@ const createTransporter = async () => {
     "https://developers.google.com/oauthplayground"
   );
   oauth2Client.setCredentials({
-    refresh_token: process.env.REFRESH_TOKEN
+    refresh_token: process.env.REFRESH_TOKEN,
   });
 
   const accessToken = await new Promise((resolve, reject) => {
@@ -32,8 +32,8 @@ const createTransporter = async () => {
       accessToken,
       clientId: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      refreshToken: process.env.REFRESH_TOKEN
-    }
+      refreshToken: process.env.REFRESH_TOKEN,
+    },
   });
 
   return transporter;
@@ -76,7 +76,7 @@ function sendMail(items) {
     subject: "Verifier",
     html: html,
     to: "tbazelczuk@gmail.com",
-    from: process.env.EMAIL
+    from: "tbazelczuk@gmail.com",
   });
 }
 
