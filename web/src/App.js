@@ -11,9 +11,7 @@ function App() {
   const loadSites = useCallback(() => {
     fetch('/api/sites')
       .then((res) => res.json())
-      .then((data) => {
-        setSites(data)
-      })
+      .then((data) => setSites(data))
   }, [])
 
   const onAdd = () => {
@@ -30,7 +28,6 @@ function App() {
         setUrl('')
         loadSites()
       })
-      .catch(console.error)
   }
 
   const onDelete = useCallback((_id) => {
@@ -45,7 +42,6 @@ function App() {
         .then(() => {
           loadSites()
         })
-        .catch(console.error);
     }
   }, [loadSites]);
 
@@ -63,7 +59,6 @@ function App() {
       })
   }
 
-
   const onFetch = useCallback(({ _id, url, selector }) => {
     fetch('/api/fetch', {
       method: 'PUT',
@@ -74,9 +69,8 @@ function App() {
     })
       .then((res) => res.json())
       .then(({ value }) => {
-        setSites((sites) => sites.map((site) => site._id === _id ? { ...site, value, newValue: true } : site))
+        setSites((sites) => sites.map((site) => site._id === _id ? { ...site, value, newValue: value !== site.value } : site))
       })
-      .catch(console.error);
   }, []);
 
   const onChange = useCallback(({ _id, ...args }) => {
@@ -92,7 +86,6 @@ function App() {
       body: JSON.stringify({ _id, url, selector, value })
     })
       .then(() => loadSites())
-      .catch(console.error);
   }, [loadSites]);
 
   useEffect(() => loadSites(), [loadSites])

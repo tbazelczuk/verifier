@@ -24,9 +24,8 @@ async function fetch({ url, selector }) {
     try {
         const resp = await axios.get(url);
         const $ = cheerio.load(resp.data);
-        console.log(resp.data)
-        const html = ($(selector).html() || '').trim();
-        return html;
+        const text = ($(selector).text() || '').trim();
+        return text;
     } catch (err) {
         console.log(err);
     }
