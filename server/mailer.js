@@ -1,17 +1,19 @@
-require("dotenv").config();
-
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
+const clientId = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
+const refreshToken = process.env.REFRESH_TOKEN;
+
 const createTransporter = async () => {
   const oauth2Client = new OAuth2(
-    process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET,
+    clientId,
+    clientSecret,
     "https://developers.google.com/oauthplayground"
   );
   oauth2Client.setCredentials({
-    refresh_token: process.env.REFRESH_TOKEN,
+    refresh_token: refreshToken
   });
 
   const accessToken = await new Promise((resolve, reject) => {
@@ -30,9 +32,9 @@ const createTransporter = async () => {
       type: "OAuth2",
       user: "tbazelczuk@gmail.com",
       accessToken,
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      refreshToken: process.env.REFRESH_TOKEN,
+      clientId,
+      clientSecret,
+      refreshToken
     },
   });
 

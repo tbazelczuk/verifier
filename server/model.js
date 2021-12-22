@@ -23,7 +23,6 @@ async function connect() {
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify: false,
       },
       function (err, res) {
         if (err) {
@@ -45,7 +44,7 @@ function disconnect() {
 
 async function getAll() {
   var query = NewsModel.find(null, null, {
-    sort: { updated_at: -1 },
+    sort: { created_at: 1 },
   });
   return query;
 }
@@ -55,6 +54,8 @@ const shouldUpdate = (item, doc) => {
 };
 
 async function save(item) {
+  console.log('save', item);
+
   return new Promise(function (resolve, reject) {
     const { url } = item;
 
@@ -104,10 +105,45 @@ async function saveAll(items) {
   return Promise.all(arr);
 }
 
+async function update(item) {
+  console.log('update', item);
+
+  return new Promise(function (resolve, reject) {
+    NewsModel.updateOne({ _id: item._id }, item)
+      .then(() => {
+        resolve(item);
+      })
+      .catch((err) => {
+        console.log(err);
+        reject();
+      });
+  });
+}
+
+async function find(_id) {
+  return new Promise(function (resolve, reject) {
+    NewsModel.findOne({ _id })
+      .then((doc) => {
+        resolve(doc);
+      })
+      .catch((err) => {
+        console.log(err);
+        reject();
+      });
+  });
+}
+
+function deleteById(_id) {
+  return NewsModel.findByIdAndDelete(_id)
+}
+
 module.exports = {
   disconnect,
   connect,
   saveAll,
+  deleteById,
+  find,
   save,
+  update,
   getAll,
 };
