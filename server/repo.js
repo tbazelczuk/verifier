@@ -21,11 +21,17 @@ const merge = (items, values) => {
 
 async function fetch({ url, selector }) {
     console.log("fetch", url, selector);
+
     try {
         const resp = await axios.get(url);
-        const $ = cheerio.load(resp.data);
-        const text = ($(selector).first().text() || '').trim();
-        return text;
+        let $ = cheerio.load(resp.data);
+
+        if(selector.startsWith('noscript')) {
+            $ = cheerio.load($('noscript').first().html())
+            selector = selector.replace('noscript', '').trim()
+        }
+
+        return ($(selector).first().text() || '').trim();
     } catch (err) {
         console.log(err);
     }
@@ -43,7 +49,6 @@ const fetchAll = async () => {
     const values = await Promise.all(
         resp.map(({ url, selector }) => fetch({ url, selector }))
     );
-
     const items = await model.saveAll(merge(resp, values));
     console.log("fetched items", items.length);
 
