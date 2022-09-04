@@ -1,28 +1,22 @@
 const puppeteer = require('puppeteer');
 
-async function fetchWithPuppeteer () {
+async function fetchWithPuppeteer({ url, selector }) {
     const browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox'],
     });
     const page = await browser.newPage();
-    await page.goto('https://news.ycombinator.com', {
+    await page.goto(url, {
         waitUntil: 'networkidle2',
     });
-    // Get the "viewport" of the page, as reported by the page.
-    const dimensions = await page.evaluate(() => {
-        return {
-            width: document.documentElement.clientWidth,
-            height: document.documentElement.clientHeight,
-            deviceScaleFactor: window.devicePixelRatio,
-        };
+    
+    const textContent = await page.evaluate(() => {
+        return document.querySelector(selector).textContent;
     });
-
-    console.log('Dimensions:', dimensions);
 
     await browser.close();
 
-    return dimensions
+    return textContent
 }
 
 module.exports = {

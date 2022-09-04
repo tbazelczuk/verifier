@@ -10,7 +10,7 @@ const mailer = require("./mailer");
 const { fetch, fetchAndSave } = require("./repo");
 const { fetchWithPuppeteer } = require("./fetch");
 
-model.connect();
+// model.connect();
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -38,17 +38,17 @@ app.put("/api/sites", async (req, res, next) => {
   res.json(site);
 });
 
-app.get("/api/fetch", async (req, res, next) => {
-  const { url, selector } = req.body
-  const value = await fetchWithPuppeteer({ url, selector })
-  res.json(value);
-});
-
 app.put("/api/fetch", async (req, res, next) => {
   const { url, selector } = req.body
-  const value = await fetch({ url, selector })
+  const value = await fetchWithPuppeteer({ url, selector })
   res.json({ value });
 });
+
+// app.put("/api/fetch", async (req, res, next) => {
+//   const { url, selector } = req.body
+//   const value = await fetch({ url, selector })
+//   res.json({ value });
+// });
 
 app.delete("/api/delete", async (req, res, next) => {
   const { _id } = req.body
