@@ -9,10 +9,10 @@ async function fetchWithPuppeteer({ url, selector }) {
     await page.goto(url, {
         waitUntil: 'networkidle2',
     });
-    
-    const textContent = await page.evaluate(() => {
-        return document.querySelector(selector).textContent;
-    });
+
+    const textContent = await page.evaluate((selector) => {
+        return (document.querySelector(selector).textContent || '').trim();
+    }, selector);
 
     await browser.close();
 
