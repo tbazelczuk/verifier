@@ -10,7 +10,7 @@ const mailer = require("./mailer");
 const { fetch, fetchAndSave } = require("./repo");
 const { fetchWithPuppeteer } = require("./fetch");
 
-// model.connect();
+model.connect();
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
