@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 
-async function fetchWithPuppeteer({ url, selector }) {
+async function fetch({ url, selector }) {
     const browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox'],
@@ -11,7 +11,8 @@ async function fetchWithPuppeteer({ url, selector }) {
     });
 
     const textContent = await page.evaluate((selector) => {
-        return (document.querySelector(selector).textContent || '').trim();
+        const element = document.querySelector(selector);
+        return element ? element.textContent.trim() : '';
     }, selector);
 
     await browser.close();
@@ -20,5 +21,5 @@ async function fetchWithPuppeteer({ url, selector }) {
 }
 
 module.exports = {
-    fetchWithPuppeteer
+    fetch
 }

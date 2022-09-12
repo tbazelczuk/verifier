@@ -1,8 +1,7 @@
 
-const axios = require('axios').default;
-const cheerio = require("cheerio");
 const mailer = require("./mailer");
 const model = require("./model");
+const { fetch } = require("./fetch");
 
 const sendNotification = (items) => {
     const updatedItems = items.filter((item) => item.updateFlag);
@@ -18,25 +17,6 @@ const merge = (items, values) => {
         return { url, selector, value: values[i] };
     });
 };
-
-async function fetch({ url, selector }) {
-    console.log("fetch", url, selector);
-
-    try {
-        const resp = await axios.get(url);
-        let $ = cheerio.load(resp.data);
-
-        if(selector.startsWith('noscript')) {
-            $ = cheerio.load($('noscript').first().html())
-            selector = selector.replace('noscript', '').trim()
-        }
-
-        return ($(selector).first().text() || '').trim();
-    } catch (err) {
-        console.log(err);
-    }
-    return;
-}
 
 const fetchAndSave = async ({ url, selector }) => {
     const value = await fetch({ url, selector });
@@ -58,8 +38,33 @@ const fetchAll = async () => {
     return items;
 };
 
+const save = ({ url, selector, value }) => {
+    return model.save({ url, selector, value });
+};
+
+const update = ({ _id, url, selector, value }) => {
+    return model.update({ _id, url, selector, value });
+};
+
+const deleteById = (_id) => {
+    return model.deleteById(_id);
+};
+
+const getAll = () => {
+    return model.getAll();
+}
+
+const connect = () => {
+    return model.connect();
+}
+
 module.exports = {
     fetchAndSave,
     fetchAll,
     fetch,
+    deleteById,
+    connect,
+    update,
+    getAll,
+    save
 }

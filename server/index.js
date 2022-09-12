@@ -5,54 +5,47 @@ const express = require("express");
 const bodyParser = require('body-parser')
 const app = express();
 const PORT = process.env.PORT || 5000;
-const model = require("./model");
 const mailer = require("./mailer");
-const { fetch, fetchAndSave } = require("./repo");
-const { fetchWithPuppeteer } = require("./fetch");
+const { connect, save, update, getAll, deleteById } = require("./repo");
+const { fetch } = require("./fetch");
 
-model.connect();
+connect()
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use(express.static(path.join(__dirname, '..', "web", "build")));
 
-app.get("/api/sites", async (req, res, next) => {
-  const sites = await model.getAll();
+app.get("/api/sites", async (req, res) => {
+  const sites = await getAll();
   res.json(sites);
 });
 
-app.post("/api/sites", async (req, res, next) => {
+app.post("/api/sites", async (req, res) => {
   try {
     const body = req.body;
-    const site = await fetchAndSave(body);
+    const site = await save(body);
     res.json(site);
   } catch ({ message }) {
     res.json({ message });
   }
 });
 
-app.put("/api/sites", async (req, res, next) => {
+app.put("/api/sites", async (req, res) => {
   const body = req.body
-  const site = await model.update(body)
+  const site = await update(body)
   res.json(site);
 });
 
-app.put("/api/fetch", async (req, res, next) => {
+app.put("/api/fetch", async (req, res) => {
   const { url, selector } = req.body
-  const value = await fetchWithPuppeteer({ url, selector })
-  res.json({ value });
+  const content = await fetch({ url, selector })
+  res.json({ content });
 });
 
-// app.put("/api/fetch", async (req, res, next) => {
-//   const { url, selector } = req.body
-//   const value = await fetch({ url, selector })
-//   res.json({ value });
-// });
-
-app.delete("/api/delete", async (req, res, next) => {
+app.delete("/api/sites", async (req, res) => {
   const { _id } = req.body
-  await model.deleteById(_id)
+  await deleteById(_id)
   res.json({ _id });
 });
 
