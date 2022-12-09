@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const uristring =
   process.env.MONGODB_URI || "mongodb://localhost/HelloMongoose";
-
-var NewsSchema = new mongoose.Schema(
+console.log(uristring )
+const NewsSchema = new mongoose.Schema(
   {
     url: String,
     value: String,
@@ -16,8 +16,10 @@ var NewsSchema = new mongoose.Schema(
 
 const NewsModel = mongoose.model("News", NewsSchema);
 
+
 async function connect() {
   return new Promise(function (resolve, reject) {
+    mongoose.set('strictQuery', true)
     mongoose.connect(
       uristring,
       {

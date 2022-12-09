@@ -5,8 +5,8 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "node my-server/server.js",
-    "build": "npm install --prefix web && npm run build --prefix web && npm install --prefix my-server",
+    "start": "node server/server.js",
+    "build": "npm install --prefix server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
